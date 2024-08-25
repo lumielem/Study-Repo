@@ -21,20 +21,48 @@ LNode *InitListHead()
     return L; 
 }
 
+LNode *quickCreateLinkedList(int *arr,int length)
+{
+    if(arr == NULL || length < 0)
+        return NULL;
+
+    LNode *L = InitListHead();  //创建头节点
+    if(L == NULL)               //判断头节点是否成功创建
+        return NULL;
+
+    LNode *temp = L;
+
+    for(int i = 0; i < length; i++)
+    {
+        LNode *p = (LNode *)malloc(sizeof(LNode));
+        if(p == NULL)           //判断内存是否成功分配
+        {
+            DeleteList(L);
+            return NULL;
+        }
+        
+        temp->next = p;
+        temp = p;
+        p->data = arr[length];
+        p->next =NULL;
+    }
+    return L;
+}
 
 //删除整条链表
 bool DeleteList(LNode *L)
 {
     if (L == NULL)
         return false;
+
     LNode *p = L;
+
     while (p != NULL)
     {
         LNode *temp = p->next;  //保存下一节点指针
         free(p);                //释放当前节点
         p = temp;               //移动到下一节点
     }
-    
     
     return true;
 }
@@ -74,10 +102,10 @@ bool InsertNextNode(LNode *L,int index,int val)
 //删除目标节点
 bool DeletetNode(LNode *L,int index)
 {
-    if(index < 1)
+    if(index < 1 || L ==NULL)
         return false;
     LNode *p = GetListNode(L,index-1);  //获取待删除节点前一节点位置
-    if(p->next == NULL || p == NULL)    //判断目标节点或前一节点是否存在
+    if(p == NULL || p->next == NULL)    //判断目标节点或前一节点是否存在
         return false;
     LNode *p1 = p->next;    //p1为目标节点
     p->next = p1->next;     
